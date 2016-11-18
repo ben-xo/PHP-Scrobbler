@@ -5,7 +5,7 @@ require_once 'Scrobbler.php';
 class example_scrobbler 
 {
     var $help = false;
-    var $appname;
+    var $appname, $debug;
     var $password, $api_key, $api_secret, $api_sk, $clientId, $clientVer, $source = 'P', $rating, $mbTrackId;
 
     function main($argc, $argv) {
@@ -18,11 +18,14 @@ class example_scrobbler
             if($this->help)
             {
                 $this->usage($this->appname, $argv);
+                return;
             }
 
-            $scrobbler = new md_Scrobbler($this->user, $this->password, 
+            $scrobbler = new md_Scrobbler($this->username, $this->password, 
                 $this->api_key, $this->api_secret, $this->api_sk, 
                 $this->clientId, $this->clientVer);
+
+            $scrobbler->debug = $this->debug;
 
             $scrobbler->add($this->artist, $this->track, $this->album, $this->trackDuration, 
                 $this->scrobbleTime, $this->trackNumber, $this->source, $this->rating, 
@@ -45,7 +48,7 @@ class example_scrobbler
         echo "    --help:               This message.\n\n";
         echo "    --username:           last.fm username\n";
         echo "    --password:           last.fm password (optional)\n";
-        echo "    --api_key:            You cna use api_key, api_secret and api_sk instead of password.\n";
+        echo "    --api_key:            You can use api_key, api_secret and api_sk instead of password.\n";
         echo "    --api_secret\n";
         echo "    --api_sk\n";
         echo "\n";
@@ -59,6 +62,11 @@ class example_scrobbler
 
     function parseOptions(array $argv)
     {
+        $options = array( 'username', 'password', 'api_key', 'api_secret', 'api_sk',
+                          'clientId', 'clientVer', 'debug',
+                          'artist', 'track', 'scrobbleTime', 'trackDuration', 'album', 
+                          'trackNumber', 'source', 'rating', 'mbTrackId' );
+
         $this->appname = array_shift($argv);
         
         while($arg = array_shift($argv))
@@ -66,105 +74,24 @@ class example_scrobbler
             if($arg == '--help' || $arg == '-h')
             {
                 $this->help = true;
+                return;
+            }
+
+            if($arg == '--debug')
+            {
+                $this->debug = true;
                 continue;
             }
 
-            if($arg == '--username')
+            foreach($options as $option_name)
             {
-                $this->username = array_shift($argv);
-                continue;
+                if($arg == '--' . $option_name)
+                {
+                    $this->$option_name = array_shift($argv);
+                    continue;
+                }
             }
-     
-            if($arg == '--password')
-            {
-                $this->password = array_shift($argv);
-                continue;
-            }
-     
-            if($arg == '--api_key')
-            {
-                $this->api_key = array_shift($argv);
-                continue;
-            }
-     
-            if($arg == '--api_secret')
-            {
-                $this->api_secret = array_shift($argv);
-                continue;
-            }
-     
-            if($arg == '--api_sk')
-            {
-                $this->api_sk = array_shift($argv);
-                continue;
-            }
-     
-            if($arg == '--clientId')
-            {
-                $this->clientId = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--clientVer')
-            {
-                $this->clientVer = array_shift($argv);
-                continue;
-            }
-     
-            if($arg == '--artist')
-            {
-                $this->artist = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--track')
-            {
-                $this->track = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--scrobbleTime')
-            {
-                $this->scrobbleTime = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--trackDuration')
-            {
-                $this->trackDuration = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--album')
-            {
-                $this->album = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--trackNumber')
-            {
-                $this->trackNumber = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--source')
-            {
-                $this->source = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--rating')
-            {
-                $this->rating = array_shift($argv);
-                continue;
-            }
-
-            if($arg == '--mbTrackId')
-            {
-                $this->mbTrackId = array_shift($argv);
-                continue;
-            }
-       }
+        }
     }
 }
 

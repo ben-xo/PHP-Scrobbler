@@ -58,6 +58,8 @@ class md_Scrobbler
 	protected $api_secret;
 	protected $api_sk;
 
+	public $debug = false;
+
 	/**
 	 * New md_Scrobbler
 	 *
@@ -220,6 +222,15 @@ class md_Scrobbler
 	
 	protected function doCurl($url, $post_data)
 	{
+		if($this->debug) 
+		{
+			echo "URL: $url\n";
+			if($post_data) 
+			{
+				var_dump($post_data);
+			}
+		}
+
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_TIMEOUT, self::TIMEOUT);
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, self::TIMEOUT);
@@ -227,6 +238,9 @@ class md_Scrobbler
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
 		$data = curl_exec($curl);
+
+		if($this->debug) print "Response: $data\n";
+
 		curl_close ($curl);
 		return $data;
 	}
@@ -234,12 +248,17 @@ class md_Scrobbler
 	protected function handShake()
 	{
 	    $url = $this->generateScrobblerUrl();
+
+		if($this->debug) print "Handshake URL: $url\n";
+
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_TIMEOUT, self::TIMEOUT);
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, self::TIMEOUT);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
 		$data = curl_exec($curl);
+
+		if($this->debug) print "Handshake Response: $data\n";
 
 		curl_close($curl);
 		$data = explode("\n", $data);
@@ -249,13 +268,13 @@ class md_Scrobbler
 			switch($data[0])
 			{
 				case 'BANNED':
-					throw new md_Scrobbler_Exception('Client banned.');
+					throw new md_Scrobbler_Exception('Client banned: ' . $data[0]);
 					break;
 				case 'BADTIME':
-					throw new md_Scrobbler_Exception('Wrong system clock.');
+					throw new md_Scrobbler_Exception('Wrong system clock: ' . $data[0]);
 					break;
 				case 'BADAUTH':
-					throw new md_Scrobbler_Exception('Wrong credentials.');
+					throw new md_Scrobbler_Exception('Wrong credentials: ' . $data[0]);
 					break;
 				default:
 					throw new md_Scrobbler_Exception('Unexpected handshake error: ' . $data[0]);

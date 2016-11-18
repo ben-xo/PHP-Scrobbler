@@ -1,0 +1,10 @@
+This is a client library for scrobbling to Last.fm.
+
+It uses the old Submissions protocol (a.k.a "Scrobble 1") documented at http://www.last.fm/api/submissions
+The preferred API ("Scrobble 2", http://www.last.fm/api/scrobbling) has an example client here: https://github.com/ben-xo/LastfmWSClient
+
+There is an example (command line) client in "example_scrobbler.php". Try: php example_scrobbler.php --help
+
+Examples:
+php example_scrobbler.php --username <username> --password <password> --artist Test --track Test --trackDuration 30
+php example_scrobbler.php --username <username> --password <password> --artist Test --track Test --trackDuration 30 --debug
