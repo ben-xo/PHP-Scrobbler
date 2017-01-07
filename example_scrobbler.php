@@ -62,11 +62,6 @@ class example_scrobbler
 
     function parseOptions(array $argv)
     {
-        $options = array( 'username', 'password', 'api_key', 'api_secret', 'api_sk',
-                          'clientId', 'clientVer', 'debug',
-                          'artist', 'track', 'scrobbleTime', 'trackDuration', 'album', 
-                          'trackNumber', 'source', 'rating', 'mbTrackId' );
-
         $this->appname = array_shift($argv);
         
         while($arg = array_shift($argv))
@@ -83,13 +78,27 @@ class example_scrobbler
                 continue;
             }
 
-            foreach($options as $option_name)
+            $this->parseOption($arg, $argv);
+        }
+    }
+
+    function parseOption($arg, &$argv)
+    {
+        $options = array( 'username', 'password', 'api_key', 'api_secret', 'api_sk',
+                          'clientId', 'clientVer',
+                          'artist', 'track', 'scrobbleTime', 'trackDuration', 'album', 
+                          'trackNumber', 'source', 'rating', 'mbTrackId' );
+
+        foreach($options as $option_name)
+        {
+            if($arg == '--' . $option_name)
             {
-                if($arg == '--' . $option_name)
+                $this->$option_name = array_shift($argv);
+                if($this->debug)
                 {
-                    $this->$option_name = array_shift($argv);
-                    continue;
+                    echo "Saw --" . $option_name . " as " . $this->$option_name . "\n";
                 }
+                return;
             }
         }
     }
