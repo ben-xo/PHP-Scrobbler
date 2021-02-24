@@ -133,8 +133,13 @@ class md_Scrobbler
 	 * @param string music brain track ID
 	 * @return boolean
 	 */
-	public function add($artist, $track, $album = '', $trackDuration, $scrobbleTime = '', $trackNumber = '', $source = 'P', $rating = '', $mbTrackId = '')
+	public function add($artist, $track, $album = '', $trackDuration = '', $scrobbleTime = '', $trackNumber = '', $source = 'P', $rating = '', $mbTrackId = '')
 	{
+		if($trackDuration === '')
+		{
+			throw new RuntimeException("$trackDuration is required");
+		}
+
 		if(empty($scrobbleTime))
 		{
 			$scrobbleTime = time();
@@ -173,8 +178,12 @@ class md_Scrobbler
 		}		
 	}
 	
-	public function nowPlaying($artist, $track, $album = '', $trackDuration, $trackNumber = '', $mbTrackId = '')
+	public function nowPlaying($artist, $track, $album = '', $trackDuration = '', $trackNumber = '', $mbTrackId = '')
 	{
+		if($trackDuration === '')
+		{
+			throw new RuntimeException("$trackDuration is required");
+		}
 	    $data = $this->generateNowPlayingPostData($artist, $track, $album, $trackDuration, $trackNumber, $mbTrackId);
 	    $this->sendSubmission( 'nowPlaying', $data );
 	}
@@ -360,8 +369,13 @@ class md_Scrobbler
 		return $body;
 	}
 	
-	protected function generateNowPlayingPostData($artist, $track, $album = '', $trackDuration, $trackNumber = '', $mbTrackId = '')
+	protected function generateNowPlayingPostData($artist, $track, $album = '', $trackDuration = '', $trackNumber = '', $mbTrackId = '')
 	{
+		if($trackDuration === '')
+		{
+			throw new RuntimeException("$trackDuration is required");
+		}
+
 		$body = 'a=' . rawurlencode($artist) . '&'
 		. 't=' . rawurlencode($track) . '&'
 		. 'l=' . $trackDuration . '&'
