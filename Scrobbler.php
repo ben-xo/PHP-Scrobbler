@@ -33,8 +33,8 @@ class md_Scrobbler
 	protected $clientId;
 	protected $clientVer;
 
-	const SCROBBLER_URL    = 'http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=<client-id>&v=<client-ver>&u=<user>&t=<timestamp>&a=<auth>';
-	const SCROBBLER_WS_URL = 'http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=<client-id>&v=<client-ver>&u=<user>&t=<timestamp>&a=<auth>&api_key=<api_key>&sk=<session_key>';
+	const SCROBBLER_URL    = 'https://post.audioscrobbler.com/?hs=true&p=1.2.1&c=<client-id>&v=<client-ver>&u=<user>&t=<timestamp>&a=<auth>';
+	const SCROBBLER_WS_URL = 'https://post.audioscrobbler.com/?hs=true&p=1.2.1&c=<client-id>&v=<client-ver>&u=<user>&t=<timestamp>&a=<auth>&api_key=<api_key>&sk=<session_key>';
 	
 	// curl timeout
 	const TIMEOUT       = 10;
