@@ -2,7 +2,7 @@
 /**
  * PHP Scrobbler
  * 
- * VERSION 1.1.1
+ * VERSION 1.1.2
  *
  * This class lets you submit tracks to a lastfm account. Curl needed.
  * 
@@ -159,6 +159,11 @@ class md_Scrobbler
 		return true;
 	}
 
+	public function getQueueSize()
+	{
+	    return count($this->queue);
+	}
+
 	/**
 	 * Submission process
 	 *
@@ -248,7 +253,13 @@ class md_Scrobbler
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+		if(defined('SCROBBLER_LOG')) {
+		    file_put_contents(SCROBBLER_LOG, time() . ' ' . $url . ': ' . $post_data . "\n", FILE_APPEND);
+		}
 		$data = curl_exec($curl);
+		if(defined('SCROBBLER_LOG')) {
+		    file_put_contents(SCROBBLER_LOG, time() . ' ' . $data . "\n", FILE_APPEND);
+		}
 
 		if($this->debug) print "Response: $data\n";
 
@@ -367,6 +378,7 @@ class md_Scrobbler
 			. 'm[' . $i . ']=' . $item['mbTrackId'] . '&';
 			$i++;
 		}
+		$body = rtrim($body , '&');
 
 		return $body;
 	}
