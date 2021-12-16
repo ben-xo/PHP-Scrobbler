@@ -1,6 +1,8 @@
 <?php
 /**
  * PHP Scrobbler
+ * 
+ * VERSION 1.1.0
  *
  * This class lets you submit tracks to a lastfm account. Curl needed.
  * 
