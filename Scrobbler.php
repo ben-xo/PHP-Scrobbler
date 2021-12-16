@@ -2,7 +2,7 @@
 /**
  * PHP Scrobbler
  * 
- * VERSION 1.1.0
+ * VERSION 1.1.1
  *
  * This class lets you submit tracks to a lastfm account. Curl needed.
  * 
@@ -378,8 +378,8 @@ class md_Scrobbler
 			throw new RuntimeException("$trackDuration is required");
 		}
 
-		$body = 'a=' . rawurlencode($artist) . '&'
-		. 't=' . rawurlencode($track) . '&'
+		$body = 'a=' . rawurlencode((string)$artist) . '&'
+		. 't=' . rawurlencode((string)$track) . '&'
 		. 'l=' . $trackDuration . '&'
 		. 'b=' . rawurlencode($album) . '&'
 		. 'n=' . $trackNumber . '&'
